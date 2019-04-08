@@ -1,6 +1,7 @@
 from Grafo import *
 from Tela import *
 
+
 class GrafoApi():
 
 	@staticmethod
