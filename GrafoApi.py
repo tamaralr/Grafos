@@ -5,11 +5,15 @@ class GrafoApi():
 
 	@staticmethod
 	def main():
-		# necessario retorna um lista com os 3 parametros
-		#lista = Tela.input_grafo("Nome do Grafo: ","qtde arestas", "qtde vértices")
-		#grafo = Grafo("Grafo1", 2, 3)
-		#grafo = Grafo(lista[0], lista[1], lista[2])
-
+		grafo = Grafo("grafo01")
+		grafo.criarVertice("v1")
+		grafo.criarVertice("v2")
+		grafo.criarVertice("v3")
+		grafo.inserirAresta("---1---",10,'v1','v3')
+		grafo.exibirGrafo()
+		grafo.removerVertice('v3')
+		print('removi')
+		grafo.exibirGrafo()
 
 if __name__ ==  '__main__':
 	#execução pelo terminal
