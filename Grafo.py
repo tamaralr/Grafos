@@ -21,6 +21,9 @@ class Grafo():
 		vertice = Vertices(nome)
 		self.__vertices.append(vertice)
 
+	def getVertices(self):
+		return self.__vertices
+
 	def inserirAresta(self,nome,custo,vertice1,vertice2):
 		for i in self.__vertices:
 			if i.getNome() == vertice1:
@@ -50,7 +53,7 @@ class Grafo():
 				for j in aux.getLista():
 					if j.getNome() == vertice:
 						aux.getLista().pop(contv)
-				contv+=1
+					contv+=1
 				self.__arestas.pop(conta)
 			conta+=1
 		conta = 0
@@ -58,7 +61,7 @@ class Grafo():
 			if i.getNome() == vertice:
 				self.__vertices.pop(conta)
 				break
-
+			conta+=1
 
 	def removerAresta(self,nome):
 		conta= 0
@@ -66,7 +69,7 @@ class Grafo():
 			if i.getNome() == nome:
 				self.__arestas.pop(conta)
 				break
-		conta+=1
+			conta+=1
 
 	def verificarAdjacente(self,vertice1,vertice2):
 		for i in self.__vertices:
@@ -100,8 +103,79 @@ class Grafo():
 			l.append(aux2.getNome())
 			concat = ''.join(l)
 			print(concat)
+	def BuscaEmLargura(self,vsaida,vertice):
+		visitados = list()
+		fila = list()
+		fila.append(vsaida)
+		visitados.append(vsaida)
+		while len(visitados) != len(self.__vertices) or len(fila) != 0:
+			for i in self.__vertices:
+				if i.getNome() == fila[0]:
+					aux = i.getLista()
+					for j in aux:
+						if j.getNome() == vertice:
+							return j
+						elif j.getNome() not in visitados:
+							visitados.append(j.getNome())
+							fila.append(j.getNome())
+				break
+			fila.pop(0)
+		print('vertice não encontrado')
+	def BuscaEmProfundidade(self,vsaida,vertice):
+		visitados = list()
+		pilha = list()
+		cont = 0
+		tamanho = len(self._arestas)
+		continuar = True
+		visitados.append(vsaida)
+		pilha.append(vsaida)
+		while len(visitados) != len(self.__vertices) or len(pilha) != 0:
+			cont = 0
+			continuar = True
+			i = self.__arestas[0]
+			aux = pilha(len(pilha-1))
+			while cont < tamanho or continuar == True:
+				while i.getVertice1().getNome() != pilha[aux] or i.getVertice2().getNome() != pilha[aux] or cont < tamanho-1:
+					cont+=1
+					i = self.__arestas[cont]
+				if i.getVertice1().getNome() == pilha[aux]:
+					if i.getVertice2().getNome() not in visitados:
+						visitados.append(i.getVertice2().getNome())
+						pilha.append(i.getVertice2().getNome())
+						continuar = False
+				elif i.getVertice2().getNome() == pilha[aux]:
+					if i.getVertice1().getNome() not in visitados:
+						visitados.append(i.getVertice1().getNome())
+						pilha.append(i.getVertice1().getNome())
+						continuar = False
+				elif cont >= tamanho :
+					pilha.pop(len(pilha)-1)
+				cont+=1
+			if visitados[len(visitados)-1] == vertice:
+				if i.getVertice1().getNome() == vertice:
+					return i.getVertice1()
+				else: return i.getVertice2()
+		print('vertice não encontrado')
 
-
-
-
-
+	def GerarArvoreMinima(self,vsaida):
+		arvore = Grafo('Arvore Minima')
+		arvore.criaVertice(vsaida)
+		aresta= self._aresta[0]
+		menor = 99999999999999999999999999999
+		aux = arvore.getVertices()
+		while len(aux) < len(self.__vertices):
+			tamanho = aux[len(aux)]
+			for j in aux:
+				for i in self.__arestas:
+					if i.getVertice1().getNome() == j.getNome() or i.getVertice2().getNome() == j.getNome():
+						if i.getVertice1() not in aux or i.getVertice2() not in aux:
+							if i.getCusto() < menor:
+								menor = i.getCusto()
+								aresta = i
+			if aresta.getVertice1() not in aux:
+				arvore.criaVertice(aresta.getVertice1().getNome())
+			else: arvore.criaVertice(aresta.getVertice2().getNome())
+			arvore.inserirAresta(aresta.getNome(), aresta.getCusto(), aresta.getVertice1().getNome(), aresta.getVertice2().getNome())
+			aux = arvore.getVertices()
+			menor = 99999999999999999999999999999
+		return arvore
