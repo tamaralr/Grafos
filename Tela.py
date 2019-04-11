@@ -91,6 +91,6 @@ class TelaPrincipal:
         pass
 
 
-tela = TelaPrincipal()
-tela.criaTela()
-tela.chamaTela()
+# tela = TelaPrincipal()
+# tela.criaTela()
+# tela.chamaTela()

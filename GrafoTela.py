@@ -1,3 +1,4 @@
+
 #no cmd digitar: pip install graphviz
 #Adicionar essas PATHs no ambiente de variaveis do win
 #baixar o graphviz.msi
@@ -44,3 +45,4 @@ arq.close()
 #s.view(tempfile.mktemp('.gv.png'))
 # dot.render('dot', 'png', 'test-output/holy-grenade.gv')
 
+#fdp -Tpng -o grafo.png grafo.gv

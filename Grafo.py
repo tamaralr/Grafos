@@ -1,4 +1,4 @@
-from Tela import *
+
 from Arestas import *
 from Vertices import *
 
@@ -8,8 +8,6 @@ class Grafo():
 		self.__rotulo = rotulo
 		self.__vertices = list()
 		self.__arestas = list()
-
-
 
 	def getRotulo(self):
 		return self.__rotulo
@@ -100,6 +98,7 @@ class Grafo():
 			aux1 = l.pop()
 			l.append(aux1.getNome())
 			l.append(i.getNome())
+			l.append(str(i.getCusto()))
 			l.append(aux2.getNome())
 			concat = ''.join(l)
 			print(concat)
@@ -110,7 +109,8 @@ class Grafo():
 		visitados.append(vsaida)
 		while len(visitados) != len(self.__vertices) or len(fila) != 0:
 			for i in self.__vertices:
-				if i.getNome() == fila[0]:
+				print(fila.index(0))
+				if i.getNome() == fila.__getitem__(0):
 					aux = i.getLista()
 					for j in aux:
 						if j.getNome() == vertice:
@@ -179,3 +179,7 @@ class Grafo():
 			aux = arvore.getVertices()
 			menor = 99999999999999999999999999999
 		return arvore
+
+
+
+
