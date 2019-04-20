@@ -108,9 +108,9 @@ class Grafo():
 		fila.append(vsaida)
 		visitados.append(vsaida)
 		while len(visitados) != len(self.__vertices) or len(fila) != 0:
+			print(len(fila))
 			for i in self.__vertices:
-				print(fila.index(0))
-				if i.getNome() == fila.__getitem__(0):
+				if i.getNome() == fila[0]:
 					aux = i.getLista()
 					for j in aux:
 						if j.getNome() == vertice:
@@ -118,14 +118,13 @@ class Grafo():
 						elif j.getNome() not in visitados:
 							visitados.append(j.getNome())
 							fila.append(j.getNome())
-				break
 			fila.pop(0)
 		print('vertice não encontrado')
 	def BuscaEmProfundidade(self,vsaida,vertice):
 		visitados = list()
 		pilha = list()
 		cont = 0
-		tamanho = len(self._arestas)
+		tamanho = len(self.__arestas)
 		continuar = True
 		visitados.append(vsaida)
 		pilha.append(vsaida)
@@ -133,25 +132,32 @@ class Grafo():
 			cont = 0
 			continuar = True
 			i = self.__arestas[0]
-			aux = pilha(len(pilha-1))
-			while cont < tamanho or continuar == True:
-				while i.getVertice1().getNome() != pilha[aux] or i.getVertice2().getNome() != pilha[aux] or cont < tamanho-1:
-					cont+=1
-					i = self.__arestas[cont]
-				if i.getVertice1().getNome() == pilha[aux]:
+			while cont < tamanho and continuar == True:
+				while(i.getVertice1().getNome() != pilha[-1]) and (i.getVertice2().getNome() != pilha[-1]):
+					if cont>=(tamanho -1):
+						break
+					else:
+						i = self.__arestas[cont]
+						cont+=1
+				cont+=1
+				if i.getVertice1().getNome() == pilha[-1]:
 					if i.getVertice2().getNome() not in visitados:
 						visitados.append(i.getVertice2().getNome())
 						pilha.append(i.getVertice2().getNome())
 						continuar = False
-				elif i.getVertice2().getNome() == pilha[aux]:
+					else:
+						i= self.__arestas[cont]
+				elif i.getVertice2().getNome() == pilha[-1]:
 					if i.getVertice1().getNome() not in visitados:
 						visitados.append(i.getVertice1().getNome())
 						pilha.append(i.getVertice1().getNome())
 						continuar = False
+					else:
+						i= self.__arestas[cont]
 				elif cont >= tamanho :
+					continuar = False
 					pilha.pop(len(pilha)-1)
-				cont+=1
-			if visitados[len(visitados)-1] == vertice:
+			if visitados[-1] == vertice:
 				if i.getVertice1().getNome() == vertice:
 					return i.getVertice1()
 				else: return i.getVertice2()
@@ -159,25 +165,33 @@ class Grafo():
 
 	def GerarArvoreMinima(self,vsaida):
 		arvore = Grafo('Arvore Minima')
-		arvore.criaVertice(vsaida)
-		aresta= self._aresta[0]
-		menor = 99999999999999999999999999999
+		arvore.criarVertice(vsaida)
+		aresta= self.__arestas[0]
+		menor = None
 		aux = arvore.getVertices()
+		verticev = []
+		verticev.append(aux[len(aux)-1].getNome())
 		while len(aux) < len(self.__vertices):
-			tamanho = aux[len(aux)]
 			for j in aux:
 				for i in self.__arestas:
 					if i.getVertice1().getNome() == j.getNome() or i.getVertice2().getNome() == j.getNome():
-						if i.getVertice1() not in aux or i.getVertice2() not in aux:
-							if i.getCusto() < menor:
+						if i.getVertice1().getNome() not in verticev or i.getVertice2().getNome() not in verticev:
+							if menor == None:
 								menor = i.getCusto()
 								aresta = i
-			if aresta.getVertice1() not in aux:
-				arvore.criaVertice(aresta.getVertice1().getNome())
-			else: arvore.criaVertice(aresta.getVertice2().getNome())
-			arvore.inserirAresta(aresta.getNome(), aresta.getCusto(), aresta.getVertice1().getNome(), aresta.getVertice2().getNome())
+							elif i.getCusto() < menor:
+								menor = i.getCusto()
+								aresta = i
+			if aresta.getVertice1().getNome() not in verticev:
+				print('if vertice 1')
+				arvore.criarVertice(aresta.getVertice1().getNome())
+			else: 
+				print('if vertice 2')
+				arvore.criarVertice(aresta.getVertice2().getNome())
 			aux = arvore.getVertices()
-			menor = 99999999999999999999999999999
+			verticev.append(aux[len(aux)-1])
+			arvore.inserirAresta(aresta.getNome(), aresta.getCusto(), aresta.getVertice1().getNome(), aresta.getVertice2().getNome())	
+			menor = None
 		return arvore
 
 
