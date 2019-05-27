@@ -1,4 +1,3 @@
-#dependecia: pip install pillow to import PIL
 from tkinter import * 
 from functools import partial
 from PIL import ImageTk, Image
