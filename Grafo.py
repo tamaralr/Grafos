@@ -1,14 +1,17 @@
 
-from Arestas import *
-from Vertices import *
+from Aresta import *
+from Vertice import *
+from Config import *
+from pydot import Dot
 
 class Grafo():
 
 	def __init__(self, rotulo):
 		self.__rotulo = rotulo
+		self.grafoTela = Dot(graph_type = 'graph')
 		self.__vertices = list()
 		self.__arestas = list()
-
+		
 	def getRotulo(self):
 		return self.__rotulo
 
@@ -16,8 +19,11 @@ class Grafo():
 		self.__rotulo = rotulo
 
 	def criarVertice(self,nome):
-		vertice = Vertices(nome)
+		vertice = Vertice(nome)
 		self.__vertices.append(vertice)
+		print(vertice.getVertice())
+		self.grafoTela.add_node(vertice.getVertice())
+
 
 	def getVertices(self):
 		return self.__vertices
@@ -28,11 +34,13 @@ class Grafo():
 				aux = i
 			elif i.getNome() == vertice2:
 				aux1 = i
-		aresta = Arestas(nome,custo,aux,aux1)
-		self.__arestas.append(aresta)
+
+		aresta = Aresta(nome,custo,aux,aux1)
+		print("aresta:" + aresta.getNome())
 		aux.setAdjacente(aux1)
 		aux1.setAdjacente(aux)
-		
+		self.grafoTela.add_edge(aresta.getAresta())
+		self.__arestas.append(aresta)		
 
 	def removerVertice(self,vertice):
 		conta = 0
@@ -89,6 +97,7 @@ class Grafo():
 		for i in self.__arestas:
 			if i.getNome() == nome:
 				return i.getVertices()
+
 	def exibirGrafo(self):
 		l =[]
 
@@ -102,6 +111,25 @@ class Grafo():
 			l.append(aux2.getNome())
 			concat = ''.join(l)
 			print(concat)
+
+				
+	def showGrafoTela(self):
+		l = []
+
+		for i in self.__arestas:
+			l = i.getVertices()
+			aux2 = l.pop()
+			aux1 = l.pop()
+			l.append(aux1.getNome())
+			l.append(i.getNome())
+			l.append(str(i.getCusto()))
+			l.append(aux2.getNome())
+			concat = ''.join(l)
+			print(concat)
+	
+	def carregarImagem(self):
+		self.grafoTela.write_png(Config.DIRETORIO_PADRAO_IMAGEM)
+
 	def BuscaEmLargura(self,vsaida,vertice):
 		visitados = list()
 		fila = list()
