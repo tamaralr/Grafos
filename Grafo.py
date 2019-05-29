@@ -8,7 +8,7 @@ class Grafo():
 
 	def __init__(self, rotulo):
 		self.__rotulo = rotulo
-		self.grafoTela = Dot(graph_type = 'graph')
+		self.__grafoTela = Dot(graph_type = 'graph')
 		self.__vertices = list()
 		self.__arestas = list()
 		
@@ -21,12 +21,14 @@ class Grafo():
 	def criarVertice(self,nome):
 		vertice = Vertice(nome)
 		self.__vertices.append(vertice)
-		print(vertice.getVertice())
-		self.grafoTela.add_node(vertice.getVertice())
+		self.__grafoTela.add_node(vertice.getVertice())
 
 
 	def getVertices(self):
 		return self.__vertices
+
+	def getArestas(self):
+		return self.__arestas
 
 	def inserirAresta(self,nome,custo,vertice1,vertice2):
 		for i in self.__vertices:
@@ -36,10 +38,9 @@ class Grafo():
 				aux1 = i
 
 		aresta = Aresta(nome,custo,aux,aux1)
-		print("aresta:" + aresta.getNome())
 		aux.setAdjacente(aux1)
 		aux1.setAdjacente(aux)
-		self.grafoTela.add_edge(aresta.getAresta())
+		self.__grafoTela.add_edge(aresta.getAresta())
 		self.__arestas.append(aresta)		
 
 	def removerVertice(self,vertice):
@@ -69,7 +70,7 @@ class Grafo():
 				break
 			conta+=1
 
-	def removerAresta(self,nome):
+	def removerAresta(self, nome):
 		conta= 0
 		for i in self.__arestas:
 			if i.getNome() == nome:
@@ -77,17 +78,18 @@ class Grafo():
 				break
 			conta+=1
 
-	def verificarAdjacente(self,vertice1,vertice2):
+	def verificarAdjacente(self, vertice1, vertice2):
 		for i in self.__vertices:
 			if i.getNome() == vertice1:
 				for j in i.getLista():
-					if j.getNome == vertice2:
+					if j.getNome() == vertice2:
 						return True
 			elif i.getNome() == vertice2:
 				for j in i.getLista():
-					if j.getNome == vertice1:
+					if j.getNome() == vertice1:
 						return True
 		return False
+
 	def pegarCustoAresta(self,nome):
 		for i in self.__arestas:
 			if i.getNome() == nome:
@@ -100,7 +102,7 @@ class Grafo():
 
 	def exibirGrafo(self):
 		l =[]
-
+		print(self.__rotulo)
 		for i in self.__arestas:
 			l= i.getVertices()
 			aux2 = l.pop()
@@ -128,7 +130,7 @@ class Grafo():
 			print(concat)
 	
 	def carregarImagem(self):
-		self.grafoTela.write_png(Config.DIRETORIO_PADRAO_IMAGEM)
+		self.__grafoTela.write_png(Config.DIRETORIO_PADRAO_IMAGEM)
 
 	def BuscaEmLargura(self,vsaida,vertice):
 		visitados = list()
@@ -222,6 +224,39 @@ class Grafo():
 			menor = None
 		return arvore
 
+
+	def grafoConvexoEhPlanar(self):
+		qtdeArestas = len(self.__arestas)
+		qtdeVertices = len(self.__vertices)
+		total = 0
+		print("Vertices: ",qtdeVertices)
+		print("Arestas: ",qtdeArestas)
+
+		if qtdeVertices >= 3:
+			total = 3 * qtdeVertices - 6
+			print("Total: ", total)
+			if(not qtdeArestas <= total):
+				print("condicao1")
+				return False
+
+			if not self.temCiclosDeComprimentoTres():
+				total = 2 * qtdeVertices - 4
+				print("Total: ", total)
+				if not qtdeArestas <= total:
+					print("condicao2")
+					return False
+
+			return True
+		else:
+			return False	
+
+	def temCiclosDeComprimentoTres(self):			
+		for vertice in self.__vertices:
+			for adjacente in vertice.getLista():
+				for adjacenteRetorno in adjacente.getLista():			
+					if self.verificarAdjacente(vertice.getNome(), adjacenteRetorno.getNome()):
+						return True
+		return False
 
 
 
