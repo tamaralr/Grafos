@@ -2,7 +2,7 @@ from pydot import Node
 
 class Vertice():
 	def __init__(self,nome):
-		self.__vertice = Node(nome, style='filled', fillcolor='green')
+		self.__vertice = Node(nome, style='filled', fillcolor='#c5c6ca', bgcolor="red")
 		self.__nome = nome		
 		self.__adjacentes = list()
 
@@ -29,7 +29,9 @@ class Vertice():
 
 	def getVertice(self):
 		return self.__vertice
-		 
+
+	def setVertice(self, cor):
+		self.__vertice.set_color(cor)
 
 
 
