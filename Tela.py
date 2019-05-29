@@ -74,9 +74,9 @@ class TelaPrincipal:
         self.btnGerarGrafoBuscaProfundidade = any
         self.btnGerarGrafoPrim = any
         self.btnVerificarGrafoPlanar = any
+        self.btnColoracao = any
+        self.btnVisualizar = any
         self.criarBotoesMetodosGrafo()
-
-
     def preencheDadosAresta(self):
         for f in self.dados_aresta:
             i = len(self.string_vars)
@@ -173,12 +173,18 @@ class TelaPrincipal:
         self.btnGerarGrafoBuscaLargura = Button(self.frameBotoes, relief="groove", border=3, text="Método Busca em Largura")
         self.btnGerarGrafoBuscaProfundidade = Button(self.frameBotoes, relief="groove", border=3, text="Método Busca em Profundidade")
         self.btnGerarGrafoPrim = Button(self.frameBotoes, relief="groove", border=3, text="Método PRIM")
+        self.btnColoracao = Button(self.frameBotoes, text="Coloração de vértices", command=self.aplicaColoracao)
+        self.btnVisualizar = Button(self.frameBotoes, text="Visualizar", command=self.visualizar)
+
         self.btnVerificarGrafoPlanar = Button(self.frameBotoes, relief="groove", border=3, text="Verificar Planaridade", command=self.popupVerificarPlanaridade)
         self.btnGerarGrafo.grid(row=0, column=0, padx=10, pady=2, stick= "W")
         self.btnGerarGrafoBuscaLargura.grid(row=1, column=0, padx=10, pady=2, stick= "W")
         self.btnGerarGrafoBuscaProfundidade.grid(row=2, column=0, padx=10, pady=2, stick= "W")
         self.btnGerarGrafoPrim.grid(row=3, column=0, padx=10, pady=2, stick= "W")
         self.btnVerificarGrafoPlanar.grid(row=4, column=0, padx=10, pady=2, stick= "W")
+        self.btnColoracao.grid(row=5, column=0, padx=10, pady=2, stick= "W")
+        self.btnVisualizar.grid(row=5, column=1, padx=10, pady=2, stick= "W")
+        
 
     def popupVerificarPlanaridade(self):
         qtde_atualizacao = self.getAtualizacao() + 1
@@ -191,6 +197,15 @@ class TelaPrincipal:
             else:
                 messagebox.showinfo("Information","O grafo é não é planar!")
             qtde_atualizacao = 0
+
+    def aplicaColoracao(self):
+        self.grafo.coloreVertices()
+
+    def visualizar(self):
+        self.grafo.carregarImagem()
+        self.atualizaTela()
+
+
 
 tela = TelaPrincipal()
 tela.criaTela()
