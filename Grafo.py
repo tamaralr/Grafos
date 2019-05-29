@@ -1,17 +1,14 @@
 
-from Aresta import *
-from Vertice import *
-from Config import *
-from pydot import Dot
+from Arestas import *
+from Vertices import *
 
 class Grafo():
 
 	def __init__(self, rotulo):
 		self.__rotulo = rotulo
-		self.__grafoTela = Dot(graph_type = 'graph')
 		self.__vertices = list()
 		self.__arestas = list()
-		
+
 	def getRotulo(self):
 		return self.__rotulo
 
@@ -19,16 +16,11 @@ class Grafo():
 		self.__rotulo = rotulo
 
 	def criarVertice(self,nome):
-		vertice = Vertice(nome)
+		vertice = Vertices(nome)
 		self.__vertices.append(vertice)
-		self.__grafoTela.add_node(vertice.getVertice())
-
 
 	def getVertices(self):
 		return self.__vertices
-
-	def getArestas(self):
-		return self.__arestas
 
 	def inserirAresta(self,nome,custo,vertice1,vertice2):
 		for i in self.__vertices:
@@ -36,12 +28,11 @@ class Grafo():
 				aux = i
 			elif i.getNome() == vertice2:
 				aux1 = i
-
-		aresta = Aresta(nome,custo,aux,aux1)
+		aresta = Arestas(nome,custo,aux,aux1)
+		self.__arestas.append(aresta)
 		aux.setAdjacente(aux1)
 		aux1.setAdjacente(aux)
-		self.__grafoTela.add_edge(aresta.getAresta())
-		self.__arestas.append(aresta)		
+		
 
 	def removerVertice(self,vertice):
 		conta = 0
@@ -70,7 +61,7 @@ class Grafo():
 				break
 			conta+=1
 
-	def removerAresta(self, nome):
+	def removerAresta(self,nome):
 		conta= 0
 		for i in self.__arestas:
 			if i.getNome() == nome:
@@ -78,18 +69,17 @@ class Grafo():
 				break
 			conta+=1
 
-	def verificarAdjacente(self, vertice1, vertice2):
+	def verificarAdjacente(self,vertice1,vertice2):
 		for i in self.__vertices:
 			if i.getNome() == vertice1:
 				for j in i.getLista():
-					if j.getNome() == vertice2:
+					if j.getNome == vertice2:
 						return True
 			elif i.getNome() == vertice2:
 				for j in i.getLista():
-					if j.getNome() == vertice1:
+					if j.getNome == vertice1:
 						return True
 		return False
-
 	def pegarCustoAresta(self,nome):
 		for i in self.__arestas:
 			if i.getNome() == nome:
@@ -99,10 +89,9 @@ class Grafo():
 		for i in self.__arestas:
 			if i.getNome() == nome:
 				return i.getVertices()
-
 	def exibirGrafo(self):
 		l =[]
-		print(self.__rotulo)
+
 		for i in self.__arestas:
 			l= i.getVertices()
 			aux2 = l.pop()
@@ -113,10 +102,6 @@ class Grafo():
 			l.append(aux2.getNome())
 			concat = ''.join(l)
 			print(concat)
-	
-	def carregarImagem(self):
-		self.__grafoTela.write_png(Config.DIRETORIO_PADRAO_IMAGEM)
-
 	def BuscaEmLargura(self,vsaida,vertice):
 		visitados = list()
 		fila = list()
@@ -135,7 +120,6 @@ class Grafo():
 							fila.append(j.getNome())
 			fila.pop(0)
 		print('vertice não encontrado')
-
 	def BuscaEmProfundidade(self,vsaida,vertice):
 		visitados = list()
 		pilha = list()
@@ -210,60 +194,6 @@ class Grafo():
 			menor = None
 		return arvore
 
-
-	def grafoConvexoEhPlanar(self):
-		qtdeArestas = len(self.__arestas)
-		qtdeVertices = len(self.__vertices)
-		total = 0
-		print("Vertices: ",qtdeVertices)
-		print("Arestas: ",qtdeArestas)
-
-		if qtdeVertices >= 3:
-			total = 3 * qtdeVertices - 6
-			print("Total: ", total)
-			if(not qtdeArestas <= total):
-				print("condicao1")
-				return False
-
-			if not self.temCiclosDeComprimentoTres():
-				total = 2 * qtdeVertices - 4
-				print("Total: ", total)
-				if not qtdeArestas <= total:
-					print("condicao2")
-					return False
-
-			return True
-		else:
-			return False	
-
-	def temCiclosDeComprimentoTres(self):			
-		for vertice in self.__vertices:
-			for adjacente in vertice.getLista():
-				for adjacenteRetorno in adjacente.getLista():			
-					if self.verificarAdjacente(vertice.getNome(), adjacenteRetorno.getNome()):
-						return True
-		return False
-
-	def coloreVertices(self):
-		#azul-claro rosa verde marrom
-		cores = list();
-		#"#00c6c5", "#cc0132", "#538e6d", "#843907"
-		cores.append("#00c6c5")
-		cores.append("#cc0132")
-		cores.append("#538e6d")
-		cores.append("#843907")
-
-		pos = 0
-		for vertice in self.__vertices:
-
-			vertice.setVertice(cores[pos])
-			pos += 1 
-			for adjacente in vertice.getLista():
-				for adjacenteDoAdjacente in adjacente.getLista():
-					vertice.setVertice(cores[pos])
-					pos += 1
-					if pos >= 4:
-						pos = 0
 
 
 
