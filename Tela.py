@@ -1,4 +1,5 @@
 from tkinter import * 
+from tkinter import messagebox 
 from functools import partial
 from PIL import ImageTk, Image
 import ImagemUtil
@@ -12,7 +13,15 @@ QTDE_VERTICE = 0
 FRAMES = []
 NOME_ARESTA = 0
 NOME_VERTICE = 0
+ATUALIZACAO_TELA = 0
 class TelaPrincipal:
+
+    def incrementaAtualizacao(self): 
+        global ATUALIZACAO_TELA
+        ATUALIZACAO_TELA = ATUALIZACAO_TELA + 1
+
+    def getAtualizacao(self):
+        return ATUALIZACAO_TELA
 
     def center(self, window): 
         #win.geometry("1364x731+0+0") #1364x731
@@ -64,8 +73,7 @@ class TelaPrincipal:
         self.btnGerarGrafoBuscaLargura = any
         self.btnGerarGrafoBuscaProfundidade = any
         self.btnGerarGrafoPrim = any
-
-
+        self.btnVerificarGrafoPlanar = any
         self.criarBotoesMetodosGrafo()
 
 
@@ -78,7 +86,6 @@ class TelaPrincipal:
             Entry(self.frameAresta, width=6, textvariable=self.string_vars[i]).grid(column=1, row=i+1,stick="W", padx=15)
     
     def entryupdate(self, sv, i):
-        print("value")
         bAresta = Button(self.frameAresta, relief="groove", border=3, command=self.addAresta)
         bAresta.config(image=self.imagemBotaoAdd, height=26, width=36)
         bAresta.grid(row=1, column=2, padx=15, pady=10, stick="W")
@@ -134,6 +141,7 @@ class TelaPrincipal:
     def atualizaTela(self):
         self.grafo.carregarImagem()
         self.atualizaCanvas()
+        self.incrementaAtualizacao()
 
     def criaTela(self):  
         self.root.title("GrafoApp")
@@ -165,11 +173,24 @@ class TelaPrincipal:
         self.btnGerarGrafoBuscaLargura = Button(self.frameBotoes, relief="groove", border=3, text="Método Busca em Largura")
         self.btnGerarGrafoBuscaProfundidade = Button(self.frameBotoes, relief="groove", border=3, text="Método Busca em Profundidade")
         self.btnGerarGrafoPrim = Button(self.frameBotoes, relief="groove", border=3, text="Método PRIM")
+        self.btnVerificarGrafoPlanar = Button(self.frameBotoes, relief="groove", border=3, text="Verificar Planaridade", command=self.popupVerificarPlanaridade)
         self.btnGerarGrafo.grid(row=0, column=0, padx=10, pady=2, stick= "W")
         self.btnGerarGrafoBuscaLargura.grid(row=1, column=0, padx=10, pady=2, stick= "W")
         self.btnGerarGrafoBuscaProfundidade.grid(row=2, column=0, padx=10, pady=2, stick= "W")
         self.btnGerarGrafoPrim.grid(row=3, column=0, padx=10, pady=2, stick= "W")
+        self.btnVerificarGrafoPlanar.grid(row=4, column=0, padx=10, pady=2, stick= "W")
 
+    def popupVerificarPlanaridade(self):
+        qtde_atualizacao = self.getAtualizacao() + 1
+        popup = Tk()
+        popup.withdraw()
+
+        if qtde_atualizacao > (len(self.grafo.getVertices()) + len(self.grafo.getArestas())):
+            if self.grafo.grafoConvexoEhPlanar():
+                messagebox.showinfo("Information","O grafo é planar!")
+            else:
+                messagebox.showinfo("Information","O grafo é não é planar!")
+            qtde_atualizacao = 0
 
 tela = TelaPrincipal()
 tela.criaTela()
