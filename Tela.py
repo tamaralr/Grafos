@@ -27,9 +27,9 @@ class TelaPrincipal:
 
     def __init__(self):
         self.root = Tk()
-        self.imagemBotaoAdd=PhotoImage(file="add-icon.png")
+        self.imagemBotaoAdd= PhotoImage(file="add-button.png")
         # flat, groove, raised, ridge, solid, or sunken
-        self.painelRoot = PanedWindow(self.root, relief="ridge", border=2)
+        self.painelRoot = PanedWindow(self.root, relief="sunken", border=2)
         self.painelRoot.grid(row=0, column=0, sticky='N', ipadx=0, ipady=0, padx=5)
 
         self.frameImagem = LabelFrame(self.painelRoot, text="Grafo", width=700, height=600)
@@ -37,11 +37,13 @@ class TelaPrincipal:
         self.update_img_canvas = any    
         self.canvas = Canvas(self.frameImagem, width=700, height=600, bg="white", borderwidth=2, highlightthickness=2, scrollregion=(0,0,800,700))
         self.fileImagem = any
-        self.image = any
         self.criaCanvas()
 
-        self.opcoesTela = LabelFrame(self.painelRoot, text= "Opções de Tela: ")
-        self.opcoesTela.grid(row=1,column=1, stick="NE", ipadx= 0, ipady=0, padx=10,pady=10)
+        self.secundario = PanedWindow(self.root, relief="sunken", border=1)
+        self.secundario.grid(row=0, column=1, sticky='N', ipadx=0, ipady=10, padx=20, pady=30)
+
+        self.opcoesTela = LabelFrame(self.secundario, text= "Opções de Tela: ")
+        self.opcoesTela.grid(row=1,column=1, stick="N", ipadx= 0, ipady=0, padx=30,pady=10)
 
         self.frameVertice = Frame(self.opcoesTela)
         self.frameVertice.grid(row=2, column=0, stick="W", padx=0,pady=5, ipadx=0)
@@ -50,20 +52,19 @@ class TelaPrincipal:
         self.criaVertice()
 
         self.frameAresta = Frame(self.opcoesTela)
-        self.frameAresta.grid(row=3, column=0, stick="W", padx=0,pady=5, ipadx=0)
+        self.frameAresta.grid(row=3, column=0, stick="W", padx=0,pady=20, ipadx=0)
         self.string_vars = []
         self.values = ["","","",""]
         self.dados_aresta = ("Nome", "Custo", "VerticeA", "VerticeB")
         self.criaArestas() 
 
-        self.cf = any
-        self.string_vars = []
-        self.fruit = []
-        self.frameBotoes = any
+        self.frameBotoes = LabelFrame(self.secundario, text="Escolha opação para gerar o Grafo: ")
+        self.frameBotoes.grid(row=2, column=1, padx=30, pady=10, stick= "N")
         self.btnGerarGrafo = any
         self.btnGerarGrafoBuscaLargura = any
         self.btnGerarGrafoBuscaProfundidade = any
         self.btnGerarGrafoPrim = any
+
 
         self.criarBotoesMetodosGrafo()
 
@@ -72,15 +73,15 @@ class TelaPrincipal:
         for f in self.dados_aresta:
             i = len(self.string_vars)
             self.string_vars.append(StringVar())
-            self.string_vars[i].trace("w", lambda name, index, mode, var=self.string_vars[i], i=i:
-                              self.entryUpdateAresta(var, i))
-            Label(self.frameAresta, text=f).grid(column=0, row=i+3, stick="w", padx=15)
-            Entry(self.frameAresta, width=6, textvariable=self.string_vars[i]).grid(column=1, row=i+3,stick="w", padx=15)
-
-    def entryUpdateAresta(self, sv, i):
+            self.string_vars[i].trace("w", lambda name, index, mode, var=self.string_vars[i], i=i: self.entryupdate(var, i))
+            Label(self.frameAresta, text=f).grid(column=0, row=i+1, stick="w", padx=15)
+            Entry(self.frameAresta, width=6, textvariable=self.string_vars[i]).grid(column=1, row=i+1,stick="W", padx=15)
+    
+    def entryupdate(self, sv, i):
+        print("value")
         bAresta = Button(self.frameAresta, relief="groove", border=3, command=self.addAresta)
         bAresta.config(image=self.imagemBotaoAdd, height=26, width=36)
-        bAresta.grid(row=9, column=0, padx=15, pady=10, stick="W")
+        bAresta.grid(row=1, column=2, padx=15, pady=10, stick="W")
 
         if(i == 0):
             self.values[0] = sv.get()
@@ -160,17 +161,16 @@ class TelaPrincipal:
         self.canvas.itemconfig(self.update_img_canvas , image=self.imageTkinter)
 
     def criarBotoesMetodosGrafo(self):
-        self.frameBotoes = LabelFrame(self.painelRoot, text="Escolha opação para gerar o Grafo: ")
         self.btnGerarGrafo = Button(self.frameBotoes, relief="groove", border=3, text="Gerar o Grafo")
         self.btnGerarGrafoBuscaLargura = Button(self.frameBotoes, relief="groove", border=3, text="Método Busca em Largura")
         self.btnGerarGrafoBuscaProfundidade = Button(self.frameBotoes, relief="groove", border=3, text="Método Busca em Profundidade")
         self.btnGerarGrafoPrim = Button(self.frameBotoes, relief="groove", border=3, text="Método PRIM")
-        
-        self.frameBotoes.grid(row=2, column=1, padx=10, pady=10, stick= "WS")
-        self.btnGerarGrafo.grid(row=1, column=0, padx=10, pady=2, stick= "W")
-        self.btnGerarGrafoBuscaLargura.grid(row=2, column=0, padx=10, pady=2, stick= "W")
-        self.btnGerarGrafoBuscaProfundidade.grid(row=3, column=0, padx=10, pady=2, stick= "W")
-        self.btnGerarGrafoPrim.grid(row=4, column=0, padx=10, pady=2, stick= "W")
+        self.btnGerarGrafo.grid(row=0, column=0, padx=10, pady=2, stick= "W")
+        self.btnGerarGrafoBuscaLargura.grid(row=1, column=0, padx=10, pady=2, stick= "W")
+        self.btnGerarGrafoBuscaProfundidade.grid(row=2, column=0, padx=10, pady=2, stick= "W")
+        self.btnGerarGrafoPrim.grid(row=3, column=0, padx=10, pady=2, stick= "W")
+
+
 tela = TelaPrincipal()
 tela.criaTela()
 tela.chamaTela()
