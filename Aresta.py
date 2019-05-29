@@ -10,7 +10,7 @@ class Aresta():
 		self.__aresta.set_label(custo)
 		self.__aresta.set_labelfontcolor("#009933")
 		self.__aresta.set_fontsize(10.0)
-		self.__aresta.set_color("blue")
+		self.__aresta.set_color("#38516b")
 
 	def setNome(self, nome):
 		self.__nome = nome
