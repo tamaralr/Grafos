@@ -113,21 +113,6 @@ class Grafo():
 			l.append(aux2.getNome())
 			concat = ''.join(l)
 			print(concat)
-
-				
-	def showGrafoTela(self):
-		l = []
-
-		for i in self.__arestas:
-			l = i.getVertices()
-			aux2 = l.pop()
-			aux1 = l.pop()
-			l.append(aux1.getNome())
-			l.append(i.getNome())
-			l.append(str(i.getCusto()))
-			l.append(aux2.getNome())
-			concat = ''.join(l)
-			print(concat)
 	
 	def carregarImagem(self):
 		self.__grafoTela.write_png(Config.DIRETORIO_PADRAO_IMAGEM)
@@ -150,6 +135,7 @@ class Grafo():
 							fila.append(j.getNome())
 			fila.pop(0)
 		print('vertice não encontrado')
+
 	def BuscaEmProfundidade(self,vsaida,vertice):
 		visitados = list()
 		pilha = list()
@@ -257,6 +243,27 @@ class Grafo():
 					if self.verificarAdjacente(vertice.getNome(), adjacenteRetorno.getNome()):
 						return True
 		return False
+
+	def coloreVertices(self):
+		#azul-claro rosa verde marrom
+		cores = list();
+		#"#00c6c5", "#cc0132", "#538e6d", "#843907"
+		cores.append("#00c6c5")
+		cores.append("#cc0132")
+		cores.append("#538e6d")
+		cores.append("#843907")
+
+		pos = 0
+		for vertice in self.__vertices:
+
+			vertice.setVertice(cores[pos])
+			pos += 1 
+			for adjacente in vertice.getLista():
+				for adjacenteDoAdjacente in adjacente.getLista():
+					vertice.setVertice(cores[pos])
+					pos += 1
+					if pos >= 4:
+						pos = 0
 
 
 
