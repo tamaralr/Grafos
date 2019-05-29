@@ -23,6 +23,11 @@ class Grafo():
 		self.__vertices.append(vertice)
 		self.__grafoTela.add_node(vertice.getVertice())
 
+	def criarVerticeComCoordenads(self,nome,cx,cy):
+		vertice = Vertice(nome)
+		vertice.InserirCoordenadas(cx, cy)
+		self.__vertices.append(vertice)
+		self.__grafoTela.add_node(vertice.getVertice())
 
 	def getVertices(self):
 		return self.__vertices
@@ -231,6 +236,8 @@ class Grafo():
 		total = 0
 		print("Vertices: ",qtdeVertices)
 		print("Arestas: ",qtdeArestas)
+		if(qtdeVertices<3):
+			return True
 
 		if qtdeVertices >= 3:
 			total = 3 * qtdeVertices - 6
@@ -277,7 +284,7 @@ class Grafo():
 					pos += 1
 					if pos >= 4:
 						pos = 0
-						
+
 	def Dijkstra(self,vsaida,vchegada):
 		fechados = list()
 		estimativa = list()
@@ -327,6 +334,58 @@ class Grafo():
 						if(custo < estimativa[indexAdjacente]):
 							estimativa[indexAdjacente] = custo
 							precedente[indexAdjacente] = selecionado
+
+	def AEstrela(self,vsaida,vchegada):
+		distanciaLinhaReta = list()
+		ordemLista = list()
+		cobjetivo = list()
+		proximo = vsaida
+		aproximacoes = list()
+		nodos = list()
+		calculoDeslocamento = list
+		distancia = 0
+		continua = True
+		grafo = Grafo('A*')
+		for i in self.__vertices:
+			if( i.getNome() == vchegada):
+				aux = i.getCoordenadas()
+				cobjetivo.append(aux[0])
+				cobjetivo.append(aux[1])
+		for i in self.__vertices:
+			aux = i.getCoordenadas()
+			distancia = abs(cobjetivo[0] - aux[0]) + abs(cobjetivo[1] - aux[1])
+			distanciaLinhaReta.append(distancia)
+			ordemCidadesLista.append(i.getNome())
+		grafo.criarVertice(proximo)
+		while(continua):
+			for i in self._arestas:
+				if(i.getVertice1().getNome() == proximo):
+					aproximacoes.append(i.getCusto())
+					nodos.append(i.getVertice2().getNome())
+				elif( i.getVertice2().getNome() == proximo ):
+					aproximacoes.append(i.getCusto())
+					nodos.append(i.getVertice1().getNome())
+			contador = len(aproximacoes)
+			for i in range(contador):
+				index = ordemLista.index(nodos[i])
+				aux = distancia + aproximacoes[i] + distanciaLinhaReta[index]
+				calculoDeslocamento.append(aux)
+			aux = min(calculoDeslocamento)
+			index = calculoDeslocamento.index(aux)
+			grafo.criarVertice(nodos[index])
+			grafo.inserirAresta('------', aproximacoes[index], proximo, nodos[index])
+			distancia = distancia + aproximacoes[index]
+			proximo = nodos[index]
+			if(proximo == vchegada):
+				continua = False
+
+
+
+
+
+
+
+
 
 	
 

@@ -2,9 +2,11 @@ from pydot import Node
 
 class Vertice():
 	def __init__(self,nome):
-		self.__vertice = Node(nome, style='filled', fillcolor='#c5c6ca', bgcolor="red")
+		self.__vertice = Node(nome, style='filled', fillcolor='green')
 		self.__nome = nome		
 		self.__adjacentes = list()
+		self.__x = 0
+		self.__y = 0
 
 
 	def add_adjacentes(self,vertice):
@@ -30,8 +32,12 @@ class Vertice():
 	def getVertice(self):
 		return self.__vertice
 
-	def setVertice(self, cor):
-		self.__vertice.set_color(cor)
+	def InserirCoordenadas(self,cx,cy):
+		self.__x = cx
+		self.__y = cy
+	def getCoordenadas(self):
+		return [self.__x,self.__y]
+		 
 
 
 
