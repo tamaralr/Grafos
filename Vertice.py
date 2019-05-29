@@ -29,6 +29,8 @@ class Vertice():
 
 	def getVertice(self):
 		return self.__vertice
+		 
+
 
 
 
