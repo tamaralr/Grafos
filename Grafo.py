@@ -23,7 +23,7 @@ class Grafo():
 		self.__vertices.append(vertice)
 		self.__grafoTela.add_node(vertice.getVertice())
 
-	def criarVerticeComCoordenads(self,nome,cx,cy):
+	def criarVerticeComCoordenadas(self,nome,cx,cy):
 		vertice = Vertice(nome)
 		vertice.InserirCoordenadas(cx, cy)
 		self.__vertices.append(vertice)
@@ -236,19 +236,17 @@ class Grafo():
 		total = 0
 		print("Vertices: ",qtdeVertices)
 		print("Arestas: ",qtdeArestas)
-		if(qtdeVertices<3):
-			return True
 
 		if qtdeVertices >= 3:
 			total = 3 * qtdeVertices - 6
-			print("Total: ", total)
-			if(not qtdeArestas <= total):
+			print("Total 1: ", total)
+			if not qtdeArestas <= total:
 				print("condicao1")
 				return False
 
 			if not self.temCiclosDeComprimentoTres():
 				total = 2 * qtdeVertices - 4
-				print("Total: ", total)
+				print("Total 2: ", total)
 				if not qtdeArestas <= total:
 					print("condicao2")
 					return False
@@ -264,6 +262,7 @@ class Grafo():
 					if self.verificarAdjacente(vertice.getNome(), adjacenteRetorno.getNome()):
 						return True
 		return False
+
 	def coloreVertices(self):
 		#azul-claro rosa verde marrom
 		cores = list();
@@ -275,7 +274,6 @@ class Grafo():
 
 		pos = 0
 		for vertice in self.__vertices:
-
 			vertice.setVertice(cores[pos])
 			pos += 1 
 			for adjacente in vertice.getLista():
@@ -297,26 +295,30 @@ class Grafo():
 			listaVertices.append(i.getNome())
 			if(i.getNome() == vsaida):
 				estimativa.append(0)
+				precedente.append('')
 			else:
 				estimativa.append(-1)
-		for j in range(contador):
-			for i in range(contador):
+				precedente.append('')
+		for j in range(0,contador):
+			for i in range(0,contador):
 				if (listaVertices[i] not in fechados):
 					if(menor == -1):
 						menor = estimativa[i]
 						selecionado = listaVertices[i]
-					elif (estimativa[i] < menor):
+					elif (estimativa[i] < menor and estimativa[i] > -1):
 						menor = estimativa[i]
 						selecionado = listaVertices[i]
 			fechados.append(selecionado)
+			menor = -1
 			for k in self.__arestas:
 				if(k.getVertice1().getNome() not in fechados and k.getVertice2().getNome() == selecionado ):
 					custo = k.getCusto()
 					indexAdjacente = listaVertices.index(k.getVertice1().getNome())
 					indexAtual = listaVertices.index(selecionado)
-					if(estimativa[indexAdjacente]== -1):
-						estimativa[indexAdjacente]== custo
-						precedente[indexAdjacente]== selecionado
+
+					if(estimativa[indexAdjacente] == -1):
+						estimativa[indexAdjacente] = custo
+						precedente[indexAdjacente] = selecionado
 					else:
 						custo = custo + estimativa[indexAtual]
 						if(custo < estimativa[indexAdjacente]):
@@ -327,13 +329,18 @@ class Grafo():
 					indexAdjacente = listaVertices.index(k.getVertice2().getNome())
 					indexAtual = listaVertices.index(selecionado)
 					if(estimativa[indexAdjacente]== -1):
-						estimativa[indexAdjacente]== custo
-						precedente[indexAdjacente]== selecionado
+						estimativa[indexAdjacente]= custo
+						precedente[indexAdjacente]= selecionado
 					else:
 						custo = custo + estimativa[indexAtual]
 						if(custo < estimativa[indexAdjacente]):
 							estimativa[indexAdjacente] = custo
 							precedente[indexAdjacente] = selecionado
+
+		for i in range(0,len(listaVertices)):
+			print(listaVertices[i])
+			print(estimativa[i])
+			print(precedente[i])
 
 	def AEstrela(self,vsaida,vchegada):
 		distanciaLinhaReta = list()
@@ -342,7 +349,7 @@ class Grafo():
 		proximo = vsaida
 		aproximacoes = list()
 		nodos = list()
-		calculoDeslocamento = list
+		calculoDeslocamento = list()
 		distancia = 0
 		continua = True
 		grafo = Grafo('A*')
@@ -355,10 +362,10 @@ class Grafo():
 			aux = i.getCoordenadas()
 			distancia = abs(cobjetivo[0] - aux[0]) + abs(cobjetivo[1] - aux[1])
 			distanciaLinhaReta.append(distancia)
-			ordemCidadesLista.append(i.getNome())
+			ordemLista.append(i.getNome()) #ordemCidadesLista#
 		grafo.criarVertice(proximo)
 		while(continua):
-			for i in self._arestas:
+			for i in self.__arestas:
 				if(i.getVertice1().getNome() == proximo):
 					aproximacoes.append(i.getCusto())
 					nodos.append(i.getVertice2().getNome())
@@ -366,18 +373,22 @@ class Grafo():
 					aproximacoes.append(i.getCusto())
 					nodos.append(i.getVertice1().getNome())
 			contador = len(aproximacoes)
-			for i in range(contador):
+			for i in range(0,contador):
 				index = ordemLista.index(nodos[i])
 				aux = distancia + aproximacoes[i] + distanciaLinhaReta[index]
 				calculoDeslocamento.append(aux)
 			aux = min(calculoDeslocamento)
 			index = calculoDeslocamento.index(aux)
+			print(nodos[index])
 			grafo.criarVertice(nodos[index])
 			grafo.inserirAresta('------', aproximacoes[index], proximo, nodos[index])
 			distancia = distancia + aproximacoes[index]
 			proximo = nodos[index]
+
 			if(proximo == vchegada):
 				continua = False
+			aproximacoes.clear()
+			nodos.clear()
 
 
 
