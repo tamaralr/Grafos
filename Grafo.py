@@ -264,24 +264,66 @@ class Grafo():
 		return False
 
 	def coloreVertices(self):
-		#azul-claro rosa verde marrom
-		cores = list();
-		#"#00c6c5", "#cc0132", "#538e6d", "#843907"
-		cores.append("#00c6c5")
-		cores.append("#cc0132")
-		cores.append("#538e6d")
-		cores.append("#843907")
+		listaVertices = list()
+		grauVertices = list()
+		numeracaoCores = list()
+		numeroCor = -1
+		for i in self.__vertices:
+			listaVertices.append(i.getNome())
+			grauVertices.append(0)
+			numeracaoCores.append(-1)
 
-		pos = 0
-		for vertice in self.__vertices:
-			vertice.setVertice(cores[pos])
-			pos += 1 
-			for adjacente in vertice.getLista():
-				for adjacenteDoAdjacente in adjacente.getLista():
-					vertice.setVertice(cores[pos])
-					pos += 1
-					if pos >= 4:
-						pos = 0
+		for i in self.__arestas:
+			v1= i.getVertice1()
+			v2= i.getVertice2()
+			index = listaVertices.index(v1.getNome())
+			grauVertices[index] = grauVertices[index] +1
+			index = listaVertices.index(v2.getNome())
+			grauVertices[index] = grauVertices[index] +1
+
+		for i in range(1,len(listaVertices)):
+			for j in range(0,i):
+				if(grauVertices[i] > grauVertices[j]):
+					aux = listaVertices[i]
+					temp = grauVertices[i]
+					listaVertices[i] = listaVertices[j]
+					grauVertices[i] = grauVertices[j]
+					listaVertices[j] = aux
+					grauVertices[j] = temp
+		for i in range(0,len(listaVertices)):
+			if(numeracaoCores[i]== -1):
+				numeroCor = numeroCor + 1
+				numeracaoCores[i] = numeroCor
+				if(i+1 < len(listaVertices)):
+					for j in range(i+1,len(listaVertices)):
+						if(numeracaoCores[j] == -1):
+							if not (self.verificarAdjacente(listaVertices[i],listaVertices[j])):
+								numeracaoCores[j] = numeroCor
+		for i in range(0,len(listaVertices)):
+			print('Vertice : ')
+			print(listaVertices[i])
+			print('Grau : ')
+			print(grauVertices[i])
+			print('Cor : ')
+			print(numeracaoCores[i])
+		#azul-claro rosa verde marrom
+		cores = list()
+		#"#00c6c5", "#cc0132", "#538e6d", "#843907"
+		# cores.append("#00c6c5")
+		# cores.append("#cc0132")
+		# cores.append("#538e6d")
+		# cores.append("#843907")
+
+		# pos = 0
+		# for vertice in self.__vertices:
+		# 	vertice.setVertice(cores[pos])
+		# 	pos += 1 
+		# 	for adjacente in vertice.getLista():
+		# 		for adjacenteDoAdjacente in adjacente.getLista():
+		# 			vertice.setVertice(cores[pos])
+		# 			pos += 1
+		# 			if pos >= 4:
+		# 				pos = 0
 
 	def Dijkstra(self,vsaida,vchegada):
 		fechados = list()
@@ -353,6 +395,15 @@ class Grafo():
 		distancia = 0
 		continua = True
 		grafo = Grafo('A*')
+		for i in self.__arestas:
+			if(i.getCusto() == 0):
+				v1 = i.getVertice1()
+				v2 = i.getVertice2()
+				c1= v1.getCoordenadas()
+				c2 = v2.getCoordenadas()
+				custo = abs(c1[0] - c2[0]) + abs(c1[1] - c2[1])
+				i.setCusto(custo)
+
 		for i in self.__vertices:
 			if( i.getNome() == vchegada):
 				aux = i.getCoordenadas()
@@ -379,7 +430,6 @@ class Grafo():
 				calculoDeslocamento.append(aux)
 			aux = min(calculoDeslocamento)
 			index = calculoDeslocamento.index(aux)
-			print(nodos[index])
 			grafo.criarVertice(nodos[index])
 			grafo.inserirAresta('------', aproximacoes[index], proximo, nodos[index])
 			distancia = distancia + aproximacoes[index]
@@ -389,6 +439,8 @@ class Grafo():
 				continua = False
 			aproximacoes.clear()
 			nodos.clear()
+			calculoDeslocamento.clear()
+		return grafo
 
 
 
